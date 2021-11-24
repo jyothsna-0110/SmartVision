@@ -1,0 +1,22 @@
+
+# dependencies
+/node_modules
+
+
+# Auto generate files
+/JSFiles
+/Images
+/Previous_Reports
+
+/TestReport/ITOpsAutomation_Report_batch_3.html
+/TestReport/cucumberreport_batch_3.json
+
+/TestReport/ITOpsAutomation_Report_batch_2.html
+/TestReport/cucumberreport_batch_2.json
+
+/TestReport/ITOpsAutomation_Report_batch_1.html
+/TestReport/cucumberreport_batch_1.json
+/logs
+
+
+

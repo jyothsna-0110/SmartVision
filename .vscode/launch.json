@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}\\Configuration_Batch_3.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ProtractorDebugger",
+            "protocol": "inspector",
+            "program": "C:\\Users\\ib2k2\\AppData\\Roaming\\npm\\node_modules\\protractor\\bin\\protractor",
+            "args": [
+                "${workspaceFolder}\\Configuration_Batch_3.js"
+            ]
+        }
+    ]
+}

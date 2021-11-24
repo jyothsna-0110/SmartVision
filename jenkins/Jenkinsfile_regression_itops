@@ -1,0 +1,106 @@
+pipeline {
+    environment{
+        IMAGE_NAME = 'smartops/regression'
+    }
+ 
+ agent { label "${NODE_LABEL}" }
+
+  options {
+    skipDefaultCheckout(true)
+  }
+
+  tools {
+        maven 'jenkins-maven'  
+    }
+
+  stages {
+        
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
+         }
+
+	    stage('clean workspace') {
+             steps {
+                 cleanWs()            
+                 }
+	     }
+
+        stage('Checkout') {
+             steps {
+                 git branch: "${Branch}", credentialsId: 'smartops_devops', url: 'https://USTInnovationEngineering@dev.azure.com/USTInnovationEngineering/USTP-SMOP-BU-00_SmartOpsQAAutomation/_git/itops-automation'
+                 }
+         }
+
+
+        stage('Test Setup') {
+            steps {
+                echo "[INFO] Executing npm install, webdriver update and tsc"
+                sh """
+               pwd
+               ls
+                npm install     
+                
+                npm run webdriver-update
+
+                node node_modules/protractor/bin/webdriver-manager update
+                node node_modules/protractor/bin/webdriver-manager update --versions.chrome 92.0.4515.107
+                /home/smartops-jenkins/.npm-packages/lib/node_modules/typescript/bin/tsc
+                """
+                
+            }   
+        }
+        stage('ITOPS Regression Tests') {
+        parallel{
+        stage('Batch 1') {
+            steps {
+                echo "[INFO] Executing Regression Test"
+                sh """                
+                  node node_modules/protractor/bin//protractor JSFiles/Configuration_Batch_3.js --params.env ${Environment_Name} --browser=${Browser} --Options=${BrowserMode} --no-sandbox
+                
+
+                """
+                
+            }   
+        }
+
+        stage('Batch 2') {
+            steps {
+                echo "[INFO] Executing Regression Test"
+                sh """                
+                  node node_modules/protractor/bin//protractor JSFiles/Configuration_Batch_.js --params.env ${Environment_Name} --browser=${Browser} --Options=${BrowserMode} --no-sandbox
+                
+
+                """
+                
+            }   
+        }
+        }
+        }
+
+  }
+   
+  post {
+        always {
+
+            emailext (
+                  subject: "Regression Test results for itops . Job '${env.JOB_NAME} . Build No ${env.BUILD_NUMBER}'",
+                  body: """Please see the below link  for regression test result
+                  ${env.BUILD_URL}/execution/node/3/ws/TestReport/""",
+                  to: "u42442@ust-global.com,sravanthi.thumma@ideabytes.com,balakishore.pendyala@ideabytes.com,ajay.nelavetla@ideabytes.com,gopi.balde@ideabytes.com",
+                  from: "noreplysmartopssvc@ust-global.com",
+                  mimeType: 'text/plain'
+                  
+             ) 
+
+
+        }
+}
+
+   
+}
+
