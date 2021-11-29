@@ -45,7 +45,7 @@ Feature: Project Creation By IE
 
         Examples:
             | Time           | Minimum | Maximum | Priority | ToastMessage                  |
-            | Every 5 Minute | 20      | 80      | PKGUS    | Project Configuration Updated |
+            | Every 10 Minute | 20      | 80      | PKGUS    | Project Configuration Updated |
 
     Scenario Outline: Configuration - Project configuration - Results Export
         When "Admin" clicks on "Results Export Configuration" Arrow
